@@ -1,6 +1,6 @@
-use std::{sync::Arc, cmp::Ordering, error::Error, path::Path, vec};
+use std::{sync::Arc, path::Path, vec};
 use image::{GenericImageView, imageops::FilterType};
-use ndarray::{Array, ArrayView, Dim, IxDyn, s, Axis};
+use ndarray::{Array, IxDyn, s, Axis};
 use ort::{Environment,SessionBuilder,tensor::InputTensor};
 use rocket::{response::content,fs::TempFile,form::Form};
 #[macro_use] extern crate rocket;
@@ -13,7 +13,7 @@ async fn main() {
     rocket::build()
         .mount("/", routes![index])
         .mount("/detect", routes![detect])
-        .launch().await;
+        .launch().await.unwrap();
 }
 
 // Site main page handler function.
@@ -58,7 +58,7 @@ fn prepare_input(buf: Vec<u8>) -> (Array<f32,IxDyn>, u32, u32) {
     for pixel in img.pixels() {
         let x = pixel.0 as usize;
         let y = pixel.1 as usize;
-        let [r,g,b,a] = pixel.2.0;
+        let [r,g,b,_] = pixel.2.0;
         input[[0, 0, y, x]] = (r as f32) / 255.0;
         input[[0, 1, y, x]] = (g as f32) / 255.0;
         input[[0, 2, y, x]] = (b as f32) / 255.0;
