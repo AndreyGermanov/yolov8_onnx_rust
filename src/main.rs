@@ -119,25 +119,29 @@ fn process_output(output:Array<f32,IxDyn>,img_width: u32, img_height: u32) -> Ve
 // https://pyimagesearch.com/2016/11/07/intersection-over-union-iou-for-object-detection/.
 // Returns Intersection over union ratio as a float number
 fn iou(box1: &(f32, f32, f32, f32, &'static str, f32), box2: &(f32, f32, f32, f32, &'static str, f32)) -> f32 {
-    intersection(box1, box2) / union_area(box1, box2)
+    return intersection(box1, box2) / union_area(box1, box2);
 }
 
 // Function calculates union area of two boxes
 // Returns Area of the boxes union as a float number
 fn union_area(box1: &(f32, f32, f32, f32, &'static str, f32), box2: &(f32, f32, f32, f32, &'static str, f32)) -> f32 {
-    let box1_area = (box1.2-box1.0)*(box1.3-box1.1);
-    let box2_area = (box2.2-box2.0)*(box2.3-box2.1);
-    box1_area + box2_area - intersection(box1, box2)
+    let (box1_x1,box1_y1,box1_x2,box1_y2,_,_) = *box1;
+    let (box2_x1,box2_y1,box2_x2,box2_y2,_,_) = *box2;
+    let box1_area = (box1_x2-box1_x1)*(box1_y2-box1_y1);
+    let box2_area = (box2_x2-box2_x1)*(box2_y2-box2_y1);
+    return box1_area + box2_area - intersection(box1, box2);
 }
 
 // Function calculates intersection area of two boxes
 // Returns Area of intersection of the boxes as a float number
 fn intersection(box1: &(f32, f32, f32, f32, &'static str, f32), box2: &(f32, f32, f32, f32, &'static str, f32)) -> f32 {
-    let x1 = box1.0.max( box2.0);
-    let y1 = box1.1.max( box2.1);
-    let x2 = box1.2.min( box2.2);
-    let y2 = box1.3.min(box2.3);
-    (x2-x1)*(y2-y1)
+    let (box1_x1,box1_y1,box1_x2,box1_y2,_,_) = *box1;
+    let (box2_x1,box2_y1,box2_x2,box2_y2,_,_) = *box2;
+    let x1 = box1_x1.max(box2_x1);
+    let y1 = box1_y1.max(box2_y1);
+    let x2 = box1_x2.min(box2_x2);
+    let y2 = box1_y2.min(box2_y2);
+    return (x2-x1)*(y2-y1);
 }
 
 // Array of YOLOv8 class labels
