@@ -119,12 +119,12 @@ fn process_output(output:Array<f32,IxDyn>,img_width: u32, img_height: u32) -> Ve
 // https://pyimagesearch.com/2016/11/07/intersection-over-union-iou-for-object-detection/.
 // Returns Intersection over union ratio as a float number
 fn iou(box1: &(f32, f32, f32, f32, &'static str, f32), box2: &(f32, f32, f32, f32, &'static str, f32)) -> f32 {
-    return intersection(box1, box2) / union_area(box1, box2);
+    return intersection(box1, box2) / union(box1, box2);
 }
 
 // Function calculates union area of two boxes
 // Returns Area of the boxes union as a float number
-fn union_area(box1: &(f32, f32, f32, f32, &'static str, f32), box2: &(f32, f32, f32, f32, &'static str, f32)) -> f32 {
+fn union(box1: &(f32, f32, f32, f32, &'static str, f32), box2: &(f32, f32, f32, f32, &'static str, f32)) -> f32 {
     let (box1_x1,box1_y1,box1_x2,box1_y2,_,_) = *box1;
     let (box2_x1,box2_y1,box2_x2,box2_y2,_,_) = *box2;
     let box1_area = (box1_x2-box1_x1)*(box1_y2-box1_y1);
