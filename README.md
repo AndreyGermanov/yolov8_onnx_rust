@@ -1,7 +1,9 @@
 # YOLOv8 inference using Rust
 
 This is a web interface to [YOLOv8 object detection neural network](https://ultralytics.com/yolov8)
-implemented on [Rust](https://go.dev).
+implemented on [Rust](https://www.rust-lang.org/).
+
+This is a source code for a ["How to create YOLOv8-based object detection web service using Python, Julia, Node.js, JavaScript, Go and Rust"](https://dev.to/andreygermanov/how-to-create-yolov8-based-object-detection-web-service-using-python-julia-nodejs-javascript-go-and-rust-4o8e) tutorial.
 
 ## Install
 
