@@ -1,7 +1,7 @@
 use std::{sync::Arc, path::Path, vec};
 use image::{GenericImageView, imageops::FilterType};
 use ndarray::{Array, IxDyn, s, Axis};
-use ort::{Environment,SessionBuilder,tensor::InputTensor};
+use ort::{Environment,SessionBuilder,Value};
 use rocket::{response::content,fs::TempFile,form::Form};
 #[macro_use] extern crate rocket;
 
@@ -71,10 +71,11 @@ fn prepare_input(buf: Vec<u8>) -> (Array<f32,IxDyn>, u32, u32) {
 // Returns raw output of YOLOv8 network as a single dimension
 // array
 fn run_model(input:Array<f32,IxDyn>) -> Array<f32,IxDyn> {
-    let input = InputTensor::FloatTensor(input);
     let env = Arc::new(Environment::builder().with_name("YOLOv8").build().unwrap());
     let model = SessionBuilder::new(&env).unwrap().with_model_from_file("yolov8m.onnx").unwrap();
-    let outputs = model.run([input]).unwrap();
+    let input_as_values = &input.as_standard_layout();
+    let model_inputs = vec![Value::from_array(model.allocator(), input_as_values).unwrap()];
+    let outputs = model.run(model_inputs).unwrap();
     let output = outputs.get(0).unwrap().try_extract::<f32>().unwrap().view().t().into_owned();
     return output;
 }
