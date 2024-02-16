@@ -68,8 +68,7 @@ fn prepare_input(buf: Vec<u8>) -> (Array<f32,IxDyn>, u32, u32) {
 
 // Function used to pass provided input tensor to
 // YOLOv8 neural network and return result
-// Returns raw output of YOLOv8 network as a single dimension
-// array
+// Returns raw output of YOLOv8 network
 fn run_model(input:Array<f32,IxDyn>) -> Array<f32,IxDyn> {
     let env = Arc::new(Environment::builder().with_name("YOLOv8").build().unwrap());
     let model = SessionBuilder::new(&env).unwrap().with_model_from_file("yolov8m.onnx").unwrap();
